@@ -25,6 +25,16 @@
   become: true
   when: config_network_vlans
 
+- name: debian | Modify netfilter for libvirt using bridge
+  synchronize:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop:
+    - { src: "bridge.conf", dest: "/etc/sysctl.d/bridge.conf" }
+    - { src: "99-bridge.rules", dest: "/etc/udev/rules.d/99-bridge.rules" }
+  become: true
+  when: config_network_bridges
+
 - name: debian | Configuring Defined Interfaces
   template:
     src: "etc/network/interfaces.j2"
